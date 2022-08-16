@@ -59,8 +59,7 @@ class MemberRepositoryTest {
 
         long delectCount = memberRepository.count();
         assertThat(delectCount).isEqualTo(0);
-
-
     }
+
     
 }
