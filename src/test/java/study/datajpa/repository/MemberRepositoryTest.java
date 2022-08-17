@@ -22,7 +22,7 @@ class MemberRepositoryTest {
     MemberRepository memberRepository;
 
     @Test
-    public void testMember(){
+    public void testMember() {
         Member member = new Member("MemberA");
         Member savedMember = memberRepository.save(member);
         Member findMember = memberRepository.findById(savedMember.getId()).get();
@@ -61,5 +61,18 @@ class MemberRepositoryTest {
         assertThat(delectCount).isEqualTo(0);
     }
 
-    
+    @Test
+    public void findByUsernameAndAgeGreaterThan() {
+        Member memberAA = new Member("memberAA", 10);
+        Member memberBB = new Member("memberBB", 20);
+
+        memberRepository.save(memberAA);
+        memberRepository.save(memberBB);
+
+        List<Member> memberList = memberRepository.findByUsernameAndAgeGreaterThan("memberBB", 15);
+        assertThat(memberList.get(0).getUsername()).isEqualTo("memberBB");
+        assertThat(memberList.get(0).getAge()).isEqualTo(20);
+    }
+
+
 }
