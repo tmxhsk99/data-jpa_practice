@@ -85,5 +85,18 @@ class MemberRepositoryTest {
         assertThat(memberList.get(0).getAge()).isEqualTo(20);
     }
 
+    @Test
+    public void findUsernameList(){
+        Member memberAA = new Member("memberAA", 10);
+        Member memberBB = new Member("memberBB", 20);
+
+        memberRepository.save(memberAA);
+        memberRepository.save(memberBB);
+
+        List<String> usernameList = memberRepository.findUsernameList();
+        for (String s : usernameList) {
+            System.out.println("usernameList = " + s);
+        }
+    }
 
 }
