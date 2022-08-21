@@ -5,6 +5,7 @@ import study.datajpa.entity.Member;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 @Repository
 public class MemberJpaRepository {
@@ -16,7 +17,14 @@ public class MemberJpaRepository {
         return member;
     }
 
-    public Member find(Long id){
+    public Member find(Long id) {
         return em.find(Member.class, id);
     }
+
+    public List<Member> findByUsername(String username) {
+        return em.createNamedQuery("Member.findByUsername", Member.class)
+                .setParameter("username", username)
+                .getResultList();
+    }
+
 }
