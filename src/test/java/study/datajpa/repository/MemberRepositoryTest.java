@@ -6,8 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
+import study.datajpa.entity.Team;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +24,8 @@ class MemberRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
 
+    @Autowired
+    EntityManager em;
     @Test
     public void testMember() {
         Member member = new Member("MemberA");
@@ -99,4 +104,27 @@ class MemberRepositoryTest {
         }
     }
 
+    @Test
+    public void findMemberDto(){
+        Member memberAA = new Member("memberAA", 10);
+        Member memberBB = new Member("memberBB", 20);
+
+        Team teamA = new Team("teamA");
+        Team teamB = new Team("teamB");
+        memberAA.setTeam(teamA);
+        memberBB.setTeam(teamB);
+
+        em.persist(teamA);
+        em.persist(teamB);
+        em.persist(memberAA);
+        em.persist(memberBB);
+
+        em.flush();
+        em.clear();
+
+        List<MemberDto> memberDto = memberRepository.findMemberDto();
+        for (MemberDto dto : memberDto) {
+            System.out.println("Member = " + dto);
+        }
+    }
 }
