@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.repository.query.Param;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.dto.MemberDto;
@@ -11,6 +12,7 @@ import study.datajpa.entity.Member;
 import study.datajpa.entity.Team;
 
 import javax.persistence.EntityManager;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -125,6 +127,19 @@ class MemberRepositoryTest {
         List<MemberDto> memberDto = memberRepository.findMemberDto();
         for (MemberDto dto : memberDto) {
             System.out.println("Member = " + dto);
+        }
+    }
+
+    @Test
+    public void findByNames() {
+        Member memberAA = new Member("memberAA", 10);
+        Member memberBB = new Member("memberBB", 20);
+
+        memberRepository.save(memberAA);
+        memberRepository.save(memberBB);
+        List<Member> result = memberRepository.findByNames(Arrays.asList("memberAA", "MemberBB"));
+        for (Member member : result) {
+            System.out.println("member = " + member);
         }
     }
 }
