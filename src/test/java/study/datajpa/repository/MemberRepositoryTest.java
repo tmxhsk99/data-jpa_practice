@@ -142,4 +142,21 @@ class MemberRepositoryTest {
             System.out.println("member = " + member);
         }
     }
+
+    @Test
+    public void returnType() {
+        Member memberAA = new Member("memberAA", 10);
+        Member memberBB = new Member("memberBB", 20);
+
+        memberRepository.save(memberAA);
+        memberRepository.save(memberBB);
+
+        List<Member> memberList = memberRepository.findListByUsername("memberAA");
+        assertThat(memberList.get(0)).isEqualTo(memberAA);
+        Member findMember = memberRepository.findMemberByUsername("memberBB");
+        assertThat(findMember).isEqualTo(memberBB);
+        Optional<Member> optionalMember = memberRepository.findOptionalByUsername("memberAA");
+        assertThat(optionalMember.get()).isEqualTo(memberAA);
+
+    }
 }
