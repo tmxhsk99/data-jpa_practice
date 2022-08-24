@@ -15,6 +15,7 @@ import study.datajpa.entity.Member;
 import study.datajpa.entity.Team;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +30,7 @@ class MemberRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
 
-    @Autowired
+    @PersistenceContext
     EntityManager em;
     @Test
     public void testMember() {
@@ -200,5 +201,30 @@ class MemberRepositoryTest {
         assertThat(page.isFirst()).isTrue();
         //다음 페이지가 있는지
         assertThat(page.hasNext()).isTrue();
+    }
+
+    @Test
+    public void bulkUpdate() throws Exception {
+        //given
+        memberRepository.save(new Member("member1", 10));
+        memberRepository.save(new Member("member2", 19));
+        memberRepository.save(new Member("member3", 20));
+        memberRepository.save(new Member("member4", 21));
+        memberRepository.save(new Member("member5", 40));
+
+        //when
+        int resultCount = memberRepository.bulkAgePlus(20);
+        // 벌크 연산 이후에 영속성 컨텍스트에 있는 값을 확이한게 되면
+        // 데이터 값이 맞지 않는다 그러므로 벌크 연산이후에는 꼭 영속성 컨텍스트를 초기화해줘야한다.
+        em.flush();
+        em.clear();
+
+        List<Member> memberList = memberRepository.findByUsername("member5");
+        Member findMember = memberList.get(0);
+        System.out.println("findMember = " + findMember);
+
+        //then
+        assertThat(resultCount).isEqualTo(3);
+
     }
 }
