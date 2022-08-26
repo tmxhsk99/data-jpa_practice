@@ -1,5 +1,6 @@
 package study.datajpa.repository;
 
+import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import study.datajpa.entity.Team;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.PersistenceUnitUtil;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +32,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class MemberRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
+
+    @Autowired
+    TeamRepository teamRepository;
 
     @PersistenceContext
     EntityManager em;
@@ -225,6 +231,46 @@ class MemberRepositoryTest {
 
         //then
         assertThat(resultCount).isEqualTo(3);
+
+    }
+
+    @Test
+    public void findMemberLazy() throws Exception {
+        //given
+        //member1 -> teamA
+        //member2 -> teamB
+        Team teamA = new Team("teamA");
+        Team teamB = new Team("teamB");
+
+        teamRepository.save(teamA);
+        teamRepository.save(teamB);
+
+        memberRepository.save(new Member("member1", 10, teamA));
+        memberRepository.save(new Member("member2", 10, teamB));
+
+        em.flush();
+        em.clear();
+
+        //when
+        //jpql 페치 조인이기 때문에 Team 로딩 되어 있슴
+        List<Member> members = memberRepository.findMemberfetchJoin();
+
+        //일반 멤버 지연로딩 멤버변수인 Team은 Member Entity의 fetchType이 Lazy이기 때문에 지연로딩된다.
+        //List<Member> members = memberRepository.findAll();
+        //then
+        for (Member member : members) {
+            //System.out.println("member.getTeam().getName() = " + member.getTeam().getName());
+
+            //지연로딩 여부 확인하기
+            //1. Hibernate 기능으로 확인
+            boolean teamIsInit = Hibernate.isInitialized(member.getTeam());
+            System.out.println("teamIsInit = " + teamIsInit);
+
+            //2. JPA 표준 방법으로 확인
+            PersistenceUnitUtil util = em.getEntityManagerFactory().getPersistenceUnitUtil();
+            boolean teamIsLoaded= util.isLoaded(member.getTeam());
+            System.out.println("teamIsLoaded = " + teamIsLoaded);
+        }
 
     }
 }

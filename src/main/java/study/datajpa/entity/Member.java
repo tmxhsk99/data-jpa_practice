@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 
+@NamedEntityGraph(name="Member.all" ,attributeNodes = @NamedAttributeNode("team"))
 @Entity
 @Getter
 @Setter
