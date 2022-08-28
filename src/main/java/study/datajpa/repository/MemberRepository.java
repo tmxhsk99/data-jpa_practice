@@ -11,7 +11,7 @@ import javax.persistence.QueryHint;
 import java.util.List;
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long>,MemberRepositoryCustom {
 /*
     @Query(name = "Member.findByUsername")
     List<Member> findByUsername(@Param("username") String username);
@@ -77,4 +77,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @QueryHints(value = {@QueryHint(name = "orghibernate.readOnly", value = "true")}, forCounting = true)
     Page<Member> findByUsername(String name, Pageable pageable);
+
+
 }
