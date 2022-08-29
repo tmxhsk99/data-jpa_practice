@@ -15,4 +15,5 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom{
     public List<Member> findMemberCustom() {
         return em.createQuery("select m from Member m").getResultList();
     }
+
 }

@@ -1,11 +1,30 @@
 package study.datajpa.entity;
 
-import javax.persistence.Column;
-import java.time.LocalDateTime;
+import lombok.Getter;
 
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import java.time.LocalDateTime;
+//mappedSuperclass를 적용해야 엔티티 상속관계를 구현할 수 있다.
+@MappedSuperclass
+@Getter
 public class JpaBaseEntity {
     @Column(updatable = false)
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
+
+    @PrePersist
+    public void prePersist() {
+        LocalDateTime now = LocalDateTime.now();
+        createdDate = now;
+        updatedDate = now;
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updatedDate = LocalDateTime.now();
+    }
 
 }
