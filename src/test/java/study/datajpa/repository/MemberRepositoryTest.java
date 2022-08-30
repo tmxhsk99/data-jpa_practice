@@ -1,5 +1,6 @@
 package study.datajpa.repository;
 
+import com.sun.source.tree.AssertTree;
 import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
 import study.datajpa.entity.Team;
+import study.datajpa.projection.UsernameOnly;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -293,4 +295,25 @@ class MemberRepositoryTest {
         List<Member> result = memberRepository.findMemberCustom();
     }
 
+    @Test
+    public void projections() throws Exception {
+        //given
+        Team teamA = new Team("teamA");
+        em.persist(teamA);
+
+        Member m1 = new Member("m1", 0, teamA);
+        Member m2 = new Member("m2", 0, teamA);
+        em.persist(m1);
+        em.persist(m2);
+
+        em.flush();
+        em.clear();
+
+        //when
+        List<UsernameOnly> result = memberRepository.findProjectonsByUsername("m1");
+
+        //then
+        assertThat(result.size()).isEqualTo(1);
+
+    }
 }

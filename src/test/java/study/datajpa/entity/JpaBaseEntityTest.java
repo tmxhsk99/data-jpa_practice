@@ -35,8 +35,8 @@ class JpaBaseEntityTest {
         Member findMember = memberRepository.findById(member.getId()).get();
 
         //then
-        System.out.println("findMember.getCreatedDate() = " + findMember.getCreatedDate());
-        System.out.println("findMember.getUpdatedDate() = " + findMember.getUpdatedDate());
+        System.out.println("findMember.getCreated() = " + findMember.getCreated());
+        System.out.println("findMember.getLastModifiedDate() = " + findMember.getLastModifiedDate());
 
     }
 
