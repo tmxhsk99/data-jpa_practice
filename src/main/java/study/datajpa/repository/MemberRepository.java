@@ -13,7 +13,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long>,MemberRepositoryCustom {
-
+    //동적 projection
+    <T> List<T> findProjectionsByUsername(String username, Class<T> type);
     List<UsernameOnly> findProjectonsByUsername(String username);
 /*
     @Query(name = "Member.findByUsername")

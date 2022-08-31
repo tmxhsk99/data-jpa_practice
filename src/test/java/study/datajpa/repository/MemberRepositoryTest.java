@@ -310,8 +310,10 @@ class MemberRepositoryTest {
         em.clear();
 
         //when
-        List<UsernameOnly> result = memberRepository.findProjectonsByUsername("m1");
 
+        //List<UsernameOnly> result = memberRepository.findProjectonsByUsername("m1");
+
+        List<UsernameOnly> result = memberRepository.findProjectionsByUsername("m1",UsernameOnly.class);
         //then
         assertThat(result.size()).isEqualTo(1);
 
