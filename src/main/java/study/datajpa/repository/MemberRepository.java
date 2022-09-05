@@ -12,9 +12,10 @@ import javax.persistence.QueryHint;
 import java.util.List;
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, Long>,MemberRepositoryCustom {
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom {
     //동적 projection
     <T> List<T> findProjectionsByUsername(String username, Class<T> type);
+
     List<UsernameOnly> findProjectonsByUsername(String username);
 /*
     @Query(name = "Member.findByUsername")
@@ -76,11 +77,14 @@ public interface MemberRepository extends JpaRepository<Member, Long>,MemberRepo
     @EntityGraph("Member.all")
     @Query("select m from Member m")
     List<Member> findMemberNamedEntityGraph();
-    @QueryHints(value = @QueryHint(name="org.hibernate.readOnly",value="true"))
+
+    @QueryHints(value = @QueryHint(name = "org.hibernate.readOnly", value = "true"))
     Member findReadOnlyByUsername(String username);
 
     @QueryHints(value = {@QueryHint(name = "orghibernate.readOnly", value = "true")}, forCounting = true)
     Page<Member> findByUsername(String name, Pageable pageable);
 
-
+    //네이티블 쿼리
+    @Query(value = "select * from member where username = ?", nativeQuery = true)
+    Member findByNativeQuery(String username);
 }
